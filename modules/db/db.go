@@ -1,19 +1,37 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 )
 
-func ConnectSqlite() *sql.DB {
-	fmt.Println("Connect to sqlite3...")
+func OpenDbFile() *os.File {
+	fmt.Println("Connecting to database...")
 
-	db, err := sql.Open("sqlite3", "../data/todos.db")
-	if err == nil {
-		panic("Can't connect to sqlite3")
+	dbFolderName := "data"
+	dbFileName := filepath.Join(dbFolderName, "database.json")
+
+	_, errFolder := os.Stat(dbFolderName)
+	dbFile, errFile := os.OpenFile(dbFileName, os.O_APPEND, 0755)
+
+	if os.IsNotExist(errFolder) {
+		err := os.MkdirAll(dbFolderName, 0755)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	fmt.Println("Connect to sqlite3 successfully!!")
+	if os.IsNotExist(errFile) {
+		_, err := os.Create(dbFileName)
+
+		if err != nil {
+			log.Fatal(errFile)
+		}
+	}
+
+	fmt.Println("Connect to database successfully!!")
 	fmt.Println("------------------------------")
-	return db
+	return dbFile
 }

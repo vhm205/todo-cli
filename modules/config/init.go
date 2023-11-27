@@ -7,7 +7,7 @@ import (
 )
 
 func Init() {
-	fmt.Println("Init config...")
+	fmt.Println("Initializing config")
 
 	func() {
 		err := godotenv.Load()

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 
 	"root/modules/config"
@@ -13,34 +16,41 @@ import (
 
 func main() {
 	config.Init()
-	db.ConnectSqlite()
+	dbFile := db.OpenDbFile()
 
 	id := uuid.New()
 
 	fmt.Println("***** Welcome to TODO CLI *****")
-	title, des := PipelineScan()
+	title, description := PipelineScan()
 
 	newTodo := todo.Todo{
 		ID:          id.String(),
 		Title:       title,
-		Description: des,
+		Description: description,
 		IsCompleted: false,
 		CreatedAt:   time.Now().String(),
 	}
-	todo.CreateTodo(newTodo)
+	todo.CreateTodo(newTodo, dbFile)
+
+	defer dbFile.Close()
 }
 
 func PipelineScan() (string, string) {
-	title := ""
-	des := ""
+	var title string
+	var description string
+
+	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("Enter your title: ")
 	fmt.Print("> ")
-	fmt.Scanln(&title)
+	title, _ = reader.ReadString('\n')
 
 	fmt.Println("Enter your description: ")
 	fmt.Print("> ")
-	fmt.Scanln(&des)
+	description, _ = reader.ReadString('\n')
 
-	return title, des
+	title = strings.Replace(title, "\n", "", -1)
+	description = strings.Replace(description, "\n", "", -1)
+
+	return title, description
 }
