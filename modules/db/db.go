@@ -8,8 +8,6 @@ import (
 )
 
 func OpenDbFile() *os.File {
-	fmt.Println("Connecting to database...")
-
 	dbFolderName := "data"
 	dbFileName := filepath.Join(dbFolderName, "database.json")
 
