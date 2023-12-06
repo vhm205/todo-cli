@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func ListTodo(dbFile *os.File) []Todo {
-	data := ReadFromFile(dbFile)
+func GetList(dbFile *os.File) []Todo {
+	data := FindAllTodo(dbFile)
 	for k, value := range data {
 		k = k + 1
 		fmt.Println("ID:", value.ID)

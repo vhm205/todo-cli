@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func CreateTodo(dbFile *os.File) {
+func Create(dbFile *os.File) {
 	id := uuid.New()
 	title, description := PipelineScan()
 
@@ -23,16 +23,13 @@ func CreateTodo(dbFile *os.File) {
 		CreatedAt:   time.Now().Format("2006-01-02 15:04:05"),
 	}
 
-	var data []Todo = ReadFromFile(dbFile)
-
-	if CheckExists(data, newTodo.Title) {
-		log.Fatal("Todo already exists")
+	_, index := FindTodo(newTodo, dbFile)
+	if index != -1 {
+		log.Println("Todo already exists")
 		return
 	}
 
-	data = append(data, newTodo)
-	WriteToFile(data, dbFile)
-
+	InsertTodo(newTodo, dbFile)
 	fmt.Println("Create Todo successfully")
 }
 

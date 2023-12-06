@@ -17,18 +17,25 @@ func ShowMenu(dbFile *os.File) {
 	choice := int8(0)
 	fmt.Print("Select an option: ")
 	fmt.Scanln(&choice)
-	fmt.Println(choice)
+	fmt.Println("==========")
 
 	switch choice {
 	case 1:
-		todo.CreateTodo(dbFile)
+		todo.Create(dbFile)
 		break
 	case 2:
-		todo.ListTodo(dbFile)
+		todo.GetList(dbFile)
+		break
+	case 3:
+		todo.Update(dbFile)
+		break
+	case 4:
+		todo.Delete(dbFile)
 		break
 	case 5:
-		todo.ClearTodo(dbFile)
-	case 0:
+		todo.ClearAll(dbFile)
+		break
+	default:
 		os.Exit(0)
 	}
 }
